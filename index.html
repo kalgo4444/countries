@@ -5,9 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Countries</title>
 		<link rel="stylesheet" href="./src/output.css" />
-		<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+		<!-- <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />	 -->
 	</head>
-	<body class="dark:bg-[#202C36]">
+	<body class="dark:bg-[#202C36] min-h-[200vh]">
 		<!--  -->
 		<header
 			class="py-[32px] shadow-md sticky top-0 bg-white z-10 dark:bg-[#2B3844]"
@@ -21,13 +21,19 @@
 					Where in the world?
 				</h1>
 				<div class="flex items-center gap-[20px] sm:gap-[30px]">
-					<button class="flex cursor-pointer items-center gap-[10px]">
+					<button
+						onclick="likeBtn()"
+						class="likeBtn flex cursor-pointer items-center gap-[10px]"
+					>
 						<span
 							class="text-[#111517] text-[16px] font-semibold dark:text-white"
 							>Liked (<span class="forLikeClass">0</span>)</span
 						>
 					</button>
-					<button class="flex cursor-pointer items-center gap-[10px]">
+					<button
+						onclick="saveBtn()"
+						class="flex cursor-pointer items-center gap-[10px]"
+					>
 						<span
 							class="text-[#111517] text-[16px] font-semibold dark:text-white"
 							>Saved (<span class="forSaveClass">0</span>)</span
@@ -56,21 +62,13 @@
 					<div
 						class="flex items-center justify-between flex-col gap-10 md:flex-row"
 					>
-						<div class="flex items-center">
-							<input
-								autocomplete="off"
-								class="search-input border-[1px] border-slate-300 dark:border-none dark:bg-[#2B3844] py-[18px] indent-1 max-w-[480px] w-full outline-none shadow-md text-[18px] rounded-l-[5px]"
-								type="text"
-								name="search"
-								placeholder="Search for a country..."
-							/>
-							<button
-								onclick="inputElOnclick()"
-								class="bg-blue-500 py-4.5 border px-4 rounded-r-[5px] duration-85 active:bg-blue-400 outline-none shadow-md"
-							>
-								Search
-							</button>
-						</div>
+						<input
+							autocomplete="off"
+							class="search-input border-[1px] border-slate-300 dark:border-none dark:bg-[#2B3844] py-[18px] indent-1 max-w-[480px] w-full outline-none shadow-md text-[18px] rounded-l-[5px]"
+							type="text"
+							name="search"
+							placeholder="Search for a country..."
+						/>
 						<select
 							class="capital-choose border-[1px] border-slate-300 dark:border-none dark:bg-[#2B3844] py-[20px] w-[200px] outline-none shadow-md text-[18px] rounded-[5px]"
 						>
@@ -83,6 +81,7 @@
 					<ul
 						class="country-list mt-[48px] grid grid-cols-1 min-[500px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12"
 					>
+						<!--  -->
 						<li class="rounded-[5px] shadow-md rounded-b-md">
 							<img src="" alt="" class="h-[160px] w-full" />
 							<div class="p-[15px]">
@@ -110,6 +109,7 @@
 										More
 									</button>
 									<button
+										onclick="countSaveOnclick()"
 										class="w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer hover:bg-slate-200 active:bg-slate-300 active:scale-95 transition-transform duration-200"
 									>
 										Save
@@ -117,12 +117,24 @@
 								</div>
 							</div>
 						</li>
+						<!--  -->
 					</ul>
 				</div>
 			</section>
 			<!--  -->
 		</main>
-
+		<!--  -->
+		<div
+			id="wrapperModal"
+			class="modal-wrapper scale-0 fixed left-0 right-0 top-0 bottom-0 bg-[#00000065] flex items-center justify-center duration-75"
+		>
+			<div
+				class="modal-inner bg-white dark:bg-[#2B3844] dark:text-white w-[600px] h-[400px] p-5 rounded-md relative"
+			>
+				.
+			</div>
+		</div>
+		<!--  -->
 		<script src="./js/countries.js"></script>
 		<script src="./js/main.js"></script>
 		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

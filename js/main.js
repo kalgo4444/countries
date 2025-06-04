@@ -1,47 +1,36 @@
-let elSelect = document.querySelector(".capital-choose")
-let counter_listEl = document.querySelector(".country-list")
-let inputEl = document.querySelector(".search-input")
-const countLike = document.querySelector(".forLikeClass")
-const countSave = document.querySelector(".forSaveClass")
+let capital_chooseEL = document.querySelector(".capital-choose")
+let country_listEl = document.querySelector(".country-list")
+let search_inputEl = document.querySelector(".search-input")
+let forLikeClassEl = document.querySelector(".forLikeClass")
+let forSaveClassEl = document.querySelector(".forSaveClass")
+const modal_wrapperEl = document.querySelector(".modal-wrapper")
+const modal_innerEl = document.querySelector(".modal-inner")
 
 
 const darkThemeBtn = function () {
 	document.documentElement.classList.toggle("dark")
 }
 
-let count = 0
-const countLikeOnclick = function () {
-	count++
-	countLike.textContent = count
-	count >= 10 ? countLike.textContent = "10" : count
-}
-let count1 = 0
-const countSaveOnclick = function () {
-	count1++
-	countSave.textContent = count1
-	count1 >= 10 ? countSave.textContent = "10" : count1
-}
 
-
-const createOptionToSelect = (arr, list) => {
+const optionToSelect = function (arr, list) {
 	arr.forEach(item => {
-		let elOption = document.createElement("option")
-		elOption.classList.add("dark:bg-[#2B3844]")
-		elOption.value = item.capital.toLowerCase()
-		elOption.textContent = item.capital
-		elSelect.appendChild(elOption)
+		let optionEl = document.createElement("option")
+		optionEl.classList.add("dark:bg-[#2B3844]")
+		optionEl.value = item.capital.toLowerCase()
+		optionEl.textContent = item.capital
+		capital_chooseEL.appendChild(optionEl)
 	})
 }
-createOptionToSelect(countries, elSelect)
+optionToSelect(countries, capital_chooseEL)
 
 
-const renderCard = function (arr, list) {
+const createCard = function (arr, list) {
 	list.innerHTML = ""
 	arr.forEach(item => {
-		let elItm = document.createElement("li")
-		list.appendChild(elItm)
-		elItm.outerHTML = `	
-        				<li class="rounded-[5px] shadow-md rounded-b-md" data-aos="fade-up">
+		let elItem = document.createElement("li")
+		list.appendChild(elItem)
+		elItem.outerHTML = `
+					<li class="rounded-[5px] shadow-md rounded-b-md" data-aos="fade-up">
 							<img src=${item.flag} alt="" class="h-[160px] object-cover w-full"/>
 							<div class="p-[15px]">
 								<strong class="text-xl">${item.name}</strong>
@@ -57,19 +46,19 @@ const renderCard = function (arr, list) {
 								</p>
 								<div class="flex items-center gap-[10px] mt-[20px]">
 									<button
-									onclick="countLikeOnclick()"
-										class="w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer hover:bg-slate-200 active:bg-slate-300 active:scale-95 transition-transform duration-200"
+									onclick=countLikeOnclick(${item.id})
+										class="${item.isLiked ? "bg-red-500 text-white" : ""} w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer active:scale-95 transition-transform duration-75"
 									>
 										Like
 									</button>
-									<button
-										class="w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer hover:bg-slate-200 active:bg-slate-300 active:scale-95 transition-transform duration-200"
+									<button onclick="moreBtn(${item.id})"
+										class="w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer active:scale-95 transition-transform duration-200"
 									>
 										More
 									</button>
 									<button
-									onclick="countSaveOnclick()"
-										class="w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer hover:bg-slate-200 active:bg-slate-300 active:scale-95 transition-transform duration-200"
+									onclick="countSaveOnclick(${item.id})"
+										class="${item.isBasket ? "bg-blue-300 text-white" : ""} w-[30%] py-[5px] border-[1px] border-slite-500 rounded-md cursor-pointer active:scale-95 transition-transform duration-75"
 									>
 										Save
 									</button>
@@ -78,23 +67,80 @@ const renderCard = function (arr, list) {
 						</li>`
 	})
 }
-renderCard(countries, counter_listEl)
+createCard(countries, country_listEl)
 
 
-elSelect.addEventListener("change", function (evn) {
-	let changeValue = evn.target.value
+capital_chooseEL.addEventListener("change", function (env) {
+	let changeValue = env.target.value
 	if (changeValue == "all") {
-		renderCard(countries, counter_listEl)
-	} else {
+		createCard(countries, country_listEl)
+	}
+	else {
 		let filterList = countries.filter(i => i.capital.toLowerCase() == changeValue)
-		renderCard(filterList, counter_listEl)
+		createCard(filterList, country_listEl)
 	}
 })
 
-const inputElOnclick = function () {
-	let userInputValue = inputEl.value
-	if (!userInputValue.trim()) return null
-	let filterEL = countries.filter(i => i.name.toLowerCase() == userInputValue.toLowerCase())
-	renderCard(filterEL, counter_listEl)
-	// inputEl.value = ""
+
+search_inputEl.addEventListener("input", function (e) {
+	let res = countries.filter(i => i.name.toLowerCase().includes(e.target.value.toLowerCase()) || i.population.toString().includes(e.target.value) || i.capital.toLowerCase().includes(e.target.value.toLowerCase()))
+	createCard(res, country_listEl)
+})
+
+const countLikeOnclick = function (id) {
+	let findObj = countries.find(item => item.id == id)
+	findObj.isLiked = !findObj.isLiked
+	createCard(countries, country_listEl)
+	forLikeClassEl.textContent = countries.filter(i => i.isLiked).length
 }
+function likeBtn() {
+	let res = countries.filter(i => i.isLiked)
+	createCard(res, country_listEl)
+}
+
+const countSaveOnclick = function (id) {
+	let findObj = countries.find(item => item.id == id)
+	findObj.isBasket = !findObj.isBasket
+	createCard(countries, country_listEl)
+	forSaveClassEl.textContent = countries.filter(i => i.isBasket).length
+}
+function saveBtn() {
+	let res = countries.filter(i => i.isBasket)
+	createCard(res, country_listEl)
+}
+
+function moreBtn(id) {
+	let findObj = countries.find(item => item.id == id)
+	console.log(findObj)
+	modal_wrapperEl.classList.remove("scale-0")
+	modal_innerEl.innerHTML = `
+			<div class="w-full h-full flex items-center justify-between>
+				<img src=${findObj.flag} alt="" class="h-[160px] object-cover w-[300px]"/>
+				<div class="flex flex-col gap-3.5">
+				<strong class="text-xl">${findObj.name}</strong>
+					<p class="font-bold mt-3">
+						Population:
+						<span class="font-normal">${findObj.population}</span>
+					</p>
+					<p class="font-bold mt-3">
+						Region: <span class="font-normal">${findObj.name}</span>
+					</p>
+					<p class="font-bold mt-3">
+						Capital: <span class="font-normal">${findObj.capital}</span>
+					</p>
+					<p class="font-bold mt-3">
+						Like: <span class="font-normal">${findObj.isLiked ? "Liked city" : "Not liked city"}</span>
+					</p>
+					<p class="font-bold mt-3">
+						Info: <span class="font-normal">${findObj.info}</span>
+					</p>
+					<p class="font-bold mt-3">
+						Location: <span class="font-normal">${findObj.location}</span>
+					</p>
+				</div>
+			</div>
+	`
+
+}
+
+modal_wrapperEl.addEventListener("click", (e) => e.target.id && modal_wrapperEl.classList.add("scale-0"))
